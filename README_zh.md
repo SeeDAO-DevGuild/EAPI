@@ -1,4 +1,4 @@
-中文 | [English]()
+中文 | [English](https://github.com/SeeDAO-DevGuild/EAPI)
 <h1 align="center"> 
     <b>EAPI  <br />
 </h1>
