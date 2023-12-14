@@ -1,3 +1,12 @@
+base:
+  log_dir: "/opt/eapi/logs"
+
+erigon:
+  host: "127.0.0.1"
+  http_port: "8888"
+  private_port: "9091"
+  data_dir: "/opt/eapi/erigon_data"
+
 postgresql:
   host: ""
   port: ""
