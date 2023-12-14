@@ -3,7 +3,7 @@
     <b>EAPI  <br />
 </h1>
 <h3 align="center"> 
-    通过EAPI可以查询链上数据，实现一个属于自己的infura平台。
+    通过EAPI可以查询链上数据，实现一个属于自己的alchemy api平台。
 <h3>
 
 ## 功能

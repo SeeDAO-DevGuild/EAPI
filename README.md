@@ -3,7 +3,7 @@ English | [中文](https://github.com/SeeDAO-DevGuild/EAPI/blob/main/README_zh.m
     <b>EAPI  <br />
 </h1>
 <h3 align="center"> 
-    Through EAPI, you can query the data on the chain and implement your own infura platform.
+    Through EAPI, you can query the data on the chain and implement your own alchemy api platform.
 <h3>
 
 ## Feature
