@@ -11,14 +11,14 @@ next() {
  printf '%-70s\n' | sed 's/\ /-/g'
 }
 
-# 红色提示
+# 红色提示，且终止脚本
 RED() {
     next && echo -e "$RED""$*""$PLAIN" && exit 1
 }
 
 # 绿色提示
 GREEN() {
-    next && echo -e "$GREEN""$*""$PLAIN" && exit 1
+    next && echo -e "$GREEN""$*""$PLAIN"
 }
 
 
@@ -27,12 +27,12 @@ basic_env_check() {
     # 检测是否存在python3
     ( echo exit | python3 ) || RED 'Python3 exec failed'
     # 检测是否存在python3 pip
-    ( python3 -m pip ) || RED 'Python3 pip exec failed'
+    ( python3 -m pip > /dev/null ) || RED 'Python3 pip exec failed'
 }
 
 # 依赖命令安装
 yum_install() {
-    yum install git wget gcc gcc-c++ python3 python3-devel -y || RED 'Yum install failed'
+    yum install git wget gcc gcc-c++ python3 python3-devel make -y || RED 'Yum install failed'
 }
 
 # ethereum-etl 安装
@@ -50,17 +50,19 @@ etl_install() {
 
 # erigon 安装
 erigon_install() {
-    git clone --recurse-submodules -j8 https://github.com/ledgerwatch/erigon.git || RED 'git clone https://github.com/ledgerwatch/erigon.git exec failed'
-    cd erigion && make -j 8 erigon
+    wget https://go.dev/dl/go1.20.12.linux-amd64.tar.gz && tar zxvf go1.20.12.linux-amd64.tar.gz || RED 'Go download failed'
+    export PATH=`pwd`/go/bin/:$PATH
+    git clone --recurse-submodules -j8 https://github.com/ledgerwatch/erigon.git || RED 'Git clone https://github.com/ledgerwatch/erigon.git exec failed'
+    cd erigon && make -j 8 erigon || RED 'Erigon make failed'
     ./build/bin/erigon --help > /dev/null && GREEN 'Erigon install succeeded'
     cp ./build/bin/erigon "$root_dir/bin/"
+    ln -s "$root_dir/bin/erigon" /usr/bin/
 }
 
 # postgresql 初始化
 postgresql_init() {
     ( python3 "$pwd_dir"/postgresql_init.py && GREEN 'Postgresql initialization succeeded' ) || RED 'Postgresql initialization failed'
 }
-
 
 # 需要root用户执行
 if [ "$(whoami)" != "root" ] ; then
@@ -79,3 +81,5 @@ yum_install
 basic_env_check
 etl_install
 erigon_install
+python3 "$pwd_dir/postgresql_init.py" || RED 'Postgresql initialization failed'
+GREEN 'Successful installation!'
